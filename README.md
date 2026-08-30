@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # LookBook
 
 A full-stack platform to **rent, buy, and sell books** — a React + TypeScript
