@@ -122,10 +122,16 @@ BACKEND_URL                 = https://lookbook-backend.onrender.com
 # Google OAuth
 GOOGLE_CLIENT_ID            = <your-google-client-id>.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET        = <your-google-client-secret>
+# Without this, the backend defaults to http://localhost:5000/api/auth/google/callback
+# even in production — Google will send users back to localhost. Must exactly match
+# an Authorized redirect URI on the Google Cloud OAuth client.
+GOOGLE_REDIRECT_URI         = https://lookbook-backend.onrender.com/api/auth/google/callback
 
 # GitHub OAuth
 GITHUB_CLIENT_ID            = <your-github-client-id>
 GITHUB_CLIENT_SECRET        = <your-github-client-secret>
+# Same localhost-fallback trap as GOOGLE_REDIRECT_URI above.
+GITHUB_REDIRECT_URI         = https://lookbook-backend.onrender.com/api/auth/github/callback
 
 # Razorpay Payments
 RAZORPAY_KEY_ID             = rzp_live_<key>
@@ -381,7 +387,9 @@ Navigate to any inner page, refresh the browser → should NOT 404.
 | `CLOUDINARY_API_SECRET`     | ✅       | From Cloudinary dashboard             |
 | `GOOGLE_CLIENT_ID`          | Optional | Google OAuth                          |
 | `GOOGLE_CLIENT_SECRET`      | Optional | Google OAuth                          |
+| `GOOGLE_REDIRECT_URI`       | Required if using Google OAuth | `https://<backend>.onrender.com/api/auth/google/callback` — omitting this silently falls back to `localhost`, breaking login in production |
 | `GITHUB_CLIENT_ID`          | Optional | GitHub OAuth                          |
+| `GITHUB_REDIRECT_URI`       | Required if using GitHub OAuth | Same localhost-fallback trap as `GOOGLE_REDIRECT_URI` |
 | `GITHUB_CLIENT_SECRET`      | Optional | GitHub OAuth                          |
 | `RAZORPAY_KEY_ID`           | Optional | Razorpay payments                     |
 | `RAZORPAY_KEY_SECRET`       | Optional | Razorpay payments                     |
@@ -436,6 +444,15 @@ npm run push:keys
 ### ❌ CORS Error in Browser Console
 - Check `CLIENT_URL` on Render matches Vercel URL exactly — no trailing slash
 - Redeploy backend after changing env vars
+
+### ❌ "Continue with Google" redirects to http://localhost:5000/...
+- `GOOGLE_REDIRECT_URI` isn't set on Render — `lookbook-backend/src/config/env.ts`
+  falls back to `http://localhost:${PORT}/api/auth/google/callback` whenever it's
+  missing, and that fallback applies in production too, not just dev.
+- Fix: add `GOOGLE_REDIRECT_URI` (and `GITHUB_REDIRECT_URI` if using GitHub login)
+  on Render set to `https://<your-backend>.onrender.com/api/auth/google/callback`,
+  and make sure that exact URL is also added under Authorized redirect URIs on the
+  Google Cloud OAuth client — the two must match exactly (scheme, host, and path).
 
 ### ❌ Frontend Shows Blank Page / White Screen
 - Check browser DevTools console for errors

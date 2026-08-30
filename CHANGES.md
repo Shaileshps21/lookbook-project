@@ -6,6 +6,76 @@ frontend↔backend wiring documented at the bottom of this file.
 
 ---
 
+## 🚀 Session Update — 2026-08-31: Render deploy was broken since the previous session; fixed build + Google OAuth redirect
+
+Live-tested the Render backend and Vercel frontend (`https://lookbookstore.vercel.app`)
+via Chrome after the user reported errors. Two real, unrelated production bugs found
+and fixed — neither reproduced locally, which is why they'd slipped through.
+
+### Bug 1 — Every Render deploy since 11:04 PM the previous night had been failing
+Render's Deploys tab showed 5 straight failed builds (`Exited with status 2`); the
+service was quietly still serving the last *successful* build (`a0415bc`, stale by
+hours) while every push since had silently failed to go live. Root-caused via
+Render's own build logs (not just local repro, since the two didn't match):
+- `lookbook-backend/tsconfig.json` had drifted to an invalid `module`/
+  `moduleResolution` pairing across two prior commits (`node16`/`node16` — needs
+  explicit `.js` extensions on relative imports — then `node16`/`node`, a direct
+  TS5110 config error). Reverted to the original working `commonjs`/`node` combo.
+- Deeper issue underneath that: Render has `NODE_ENV=production` set (required),
+  and `npm install` under `NODE_ENV=production` silently skips **all**
+  `devDependencies` on a fresh (cache-miss) install — which is where `typescript`
+  and every `@types/*` package live here. That's why one failed build showed a
+  single tsconfig error while a later one (same code, different cache state)
+  showed hundreds of `Cannot find name 'console'/'fetch'/'Buffer'` errors: the
+  compiler itself was running with zero global type definitions available.
+  Confirmed by reproducing locally (`NODE_ENV=production npm install` → `@types/*`
+  and `typescript` missing from `node_modules`) and fixed by changing Render's
+  Build Command from `npm install && npm run build` to
+  `npm install --include=dev && npm run build`, which installs devDependencies
+  regardless of `NODE_ENV`.
+- Also removed a stray leftover `<<<<<<< HEAD` merge-conflict marker in `README.md`
+  (line 1, no matching `=======`/`>>>>>>>` — cosmetic, but a genuine leftover from
+  an old merge).
+- `DEPLOY.md` updated: Build Command in Step 1.2, plus a troubleshooting entry
+  explaining the `NODE_ENV`/devDependencies trap for the next person who hits it.
+- Verified: pushed the fix (`33083f0`), watched the Render deploy live —
+  `npm install --include=dev` pulled 673 packages (up from 181), `tsc` completed
+  with zero errors, deploy succeeded, `/health` returned 200 on
+  `https://lookbook-backend-vq14.onrender.com`.
+
+### Bug 2 — Google OAuth login redirected to `http://localhost:5000/...` in production
+User report: clicking "Continue with Google" on the deployed frontend redirected to
+`localhost:5000/api/auth/google/callback` — even though the correct Render URL was
+already added as an authorized redirect URI on the Google Cloud OAuth client.
+Root cause was on the backend, not Google's config: `lookbook-backend/src/config/
+env.ts` builds `env.google.redirectUri` from `process.env.GOOGLE_REDIRECT_URI`,
+falling back to `http://localhost:${port}/api/auth/google/callback` whenever that
+var is unset — and it was never set on Render (`DEPLOY.md` never even listed it).
+`oauthController.ts` sends that value to Google as the `redirect_uri` param on both
+the initial authorize request and the token exchange, so the backend itself was
+telling Google to send users to localhost.
+- Added `GOOGLE_REDIRECT_URI=https://lookbook-backend-vq14.onrender.com/api/auth/google/callback`
+  on Render (Environment tab), redeployed.
+- `DEPLOY.md` updated: added `GOOGLE_REDIRECT_URI`/`GITHUB_REDIRECT_URI` to the env
+  var reference table (marked required-if-using-that-OAuth-provider, not just
+  optional) and a new troubleshooting entry for this exact symptom.
+- Verified live in Chrome: reloaded the login page, clicked "Continue with Google"
+  — Google's own OAuth request now shows `redirect_uri=https%3A%2F%2Flookbook-
+  backend-vq14.onrender.com%2Fapi%2Fauth%2Fgoogle%2Fcallback` and proceeds to the
+  account chooser with no `redirect_uri_mismatch` error (didn't complete an actual
+  sign-in — no real credentials entered).
+
+### Also noted, not fixed this session
+Four separate Vercel projects (`lookbook-project`, `lookbook_`, `lookbook_store`,
+`lookbookstore.vercel.app`, `lookbook`/`lookbook-brown.vercel.app`) all deploy from
+the same `Shaileshps21/lookbook-project` repo. The backend's `CLIENT_URL`/CORS is
+configured for `lookbookstore.vercel.app` specifically, which is the one that's
+actually live and working — the other three are presumably leftover/duplicate
+imports. Flagging for the user to clean up (delete the unused ones on Vercel)
+since it's not something to guess at and delete unasked.
+
+---
+
 ## 🐛 Session Update — 2026-08-30: Feed crash fixed (real bug), profile header spacing, club invite links now member-visible + production-safe
 
 Three user-reported items from live testing of the previous session's build.
