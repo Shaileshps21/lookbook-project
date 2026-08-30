@@ -15,7 +15,7 @@ export const createApp = (): Application => {
   app.use(helmet());
   app.use(
     cors({
-      origin: env.CLIENT_URL,
+      origin: env.clientUrl,
       credentials: true,
     })
   );
