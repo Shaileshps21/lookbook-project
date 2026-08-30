@@ -47,6 +47,7 @@ Copy the commands GitHub shows you under "…or push an existing repository":
 
 ```bash
 git remote add origin https://github.com/YOUR_USERNAME/lookbook-project.git
+git remote add origin https://github.com/Shaileshps21/lookbook-project
 git branch -M main
 git push -u origin main
 ```
