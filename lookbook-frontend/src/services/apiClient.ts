@@ -84,17 +84,22 @@ export const refreshAccessToken = async <TUser>(): Promise<RefreshResult<TUser> 
   if (!refreshPromise) {
     refreshPromise = (async () => {
       try {
+        // The CSRF cookie is set on the API's own origin, which is
+        // different from this app's origin (e.g. a Render API domain vs a
+        // Vercel frontend domain) — document.cookie can never read a
+        // cross-origin cookie, so it's normal for this to be undefined even
+        // when a valid session exists. Send it when readable (same-origin
+        // dev setups, or a proxy), but don't gate the call on it — the
+        // backend falls back to validating the Origin header instead, and
+        // an absent session simply 401s here, which is a normal "guest"
+        // outcome for the caller.
         const csrfToken = getCsrfCookie();
-        // The CSRF cookie is always issued alongside the refresh cookie on
-        // login/register, so its absence means there's no session at all
-        // (guest) — skip the round-trip and avoid a noisy 403 on every load.
-        if (!csrfToken) return null;
         const res = await fetch(buildUrl("/auth/refresh"), {
           method: "POST",
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            "X-CSRF-Token": csrfToken,
+            ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
           },
         });
         if (!res.ok) return null;
