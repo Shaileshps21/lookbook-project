@@ -1,0 +1,110 @@
+{
+  "generatedAt": "2026-08-27T12:28:10.546Z",
+  "catalogSize": 185,
+  "reports": [
+    {
+      "label": "Book list search (title/author/tags regex)",
+      "query": "",
+      "suggestedFix": "Text index exists ({title,author,tags}); regex `/the/i` can't use it — consider $text for prefix/word queries.",
+      "executionTimeMs": 8,
+      "docsExamined": 260,
+      "keysExamined": 1328,
+      "nReturned": 12,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "Book count for same search",
+      "query": "",
+      "executionTimeMs": 0,
+      "docsExamined": 0,
+      "keysExamined": 0,
+      "nReturned": 0,
+      "scanStage": "unknown",
+      "indexUsed": false
+    },
+    {
+      "label": "Category + price filter, rating sort",
+      "query": "",
+      "suggestedFix": "Compound index { category:1, rentPrice:1, rating:-1 } would cover filter+sort.",
+      "executionTimeMs": 0,
+      "docsExamined": 19,
+      "keysExamined": 19,
+      "nReturned": 12,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "Homepage: popular (rating+reviews sort)",
+      "query": "",
+      "suggestedFix": "Index { rating:-1, reviewsCount:-1 }.",
+      "executionTimeMs": 0,
+      "docsExamined": 8,
+      "keysExamined": 8,
+      "nReturned": 8,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "Homepage: new releases (createdAt sort)",
+      "query": "",
+      "executionTimeMs": 0,
+      "docsExamined": 8,
+      "keysExamined": 8,
+      "nReturned": 8,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "Homepage: popular in genre",
+      "query": "",
+      "suggestedFix": "Index { category:1, rating:-1, reviewsCount:-1 }.",
+      "executionTimeMs": 0,
+      "docsExamined": 14,
+      "keysExamined": 14,
+      "nReturned": 8,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "UserActivity: recent activity for homepage",
+      "query": "",
+      "executionTimeMs": 6,
+      "docsExamined": 0,
+      "keysExamined": 0,
+      "nReturned": 0,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "Order: user's order history",
+      "query": "",
+      "executionTimeMs": 3,
+      "docsExamined": 0,
+      "keysExamined": 0,
+      "nReturned": 0,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "Public API: filtered book list + count",
+      "query": "",
+      "executionTimeMs": 0,
+      "docsExamined": 31,
+      "keysExamined": 31,
+      "nReturned": 24,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    },
+    {
+      "label": "Book by ISBN (catalog-first lookup)",
+      "query": "",
+      "executionTimeMs": 0,
+      "docsExamined": 90,
+      "keysExamined": 97,
+      "nReturned": 90,
+      "scanStage": "IXSCAN",
+      "indexUsed": true
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+### LookBook API — manual test requests
+### Use with the VS Code "REST Client" extension, or copy into curl/Postman.
+
+@baseUrl = http://localhost:5000/api
+@token = REPLACE_WITH_TOKEN_FROM_LOGIN_RESPONSE
+
+### Health check
+GET http://localhost:5000/health
+
+### Register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Jordan Rivera",
+  "email": "jordan@example.com",
+  "password": "SuperSecret123"
+}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "jordan@example.com",
+  "password": "SuperSecret123"
+}
+
+### Get current user
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### List books
+GET {{baseUrl}}/books?search=habits&sort=rating&page=1&limit=12
+
+### Get a single book
+GET {{baseUrl}}/books/REPLACE_WITH_BOOK_ID
+
+### Similar books
+GET {{baseUrl}}/books/REPLACE_WITH_BOOK_ID/similar
+
+### List categories
+GET {{baseUrl}}/categories
+
+### List plans
+GET {{baseUrl}}/plans
+
+### Add a review
+POST {{baseUrl}}/books/REPLACE_WITH_BOOK_ID/reviews
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "comment": "Loved every page of this book."
+}
+
+### Get cart
+GET {{baseUrl}}/cart
+Authorization: Bearer {{token}}
+
+### Add to cart
+POST {{baseUrl}}/cart
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "bookId": "REPLACE_WITH_BOOK_ID",
+  "mode": "rent"
+}
+
+### Update cart item quantity
+PATCH {{baseUrl}}/cart/REPLACE_WITH_BOOK_ID/rent
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "quantity": 2
+}
+
+### Remove cart item
+DELETE {{baseUrl}}/cart/REPLACE_WITH_BOOK_ID/rent
+Authorization: Bearer {{token}}
+
+### Toggle wishlist
+POST {{baseUrl}}/wishlist/REPLACE_WITH_BOOK_ID
+Authorization: Bearer {{token}}
+
+### Get wishlist
+GET {{baseUrl}}/wishlist
+Authorization: Bearer {{token}}
+
+### Checkout (creates an order from current cart)
+POST {{baseUrl}}/orders/checkout
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "address": "221B Baker Street, London"
+}
+
+### My orders
+GET {{baseUrl}}/orders
+Authorization: Bearer {{token}}
+
+### Submit a sell listing
+POST {{baseUrl}}/listings
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "The Alchemist",
+  "author": "Paulo Coelho",
+  "category": "Fiction",
+  "price": 199,
+  "condition": "Good",
+  "description": "Gently used, no markings.",
+  "images": []
+}
+
+### My listings
+GET {{baseUrl}}/listings/mine
+Authorization: Bearer {{token}}

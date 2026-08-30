@@ -1,0 +1,18 @@
+{
+  "name": "LookBook — Rent, Buy & Sell Books",
+  "short_name": "LookBook",
+  "description": "Discover, rent, buy and sell books through a modern platform for readers, students, and lifelong learners.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F5F2EA",
+  "theme_color": "#f59e0b",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

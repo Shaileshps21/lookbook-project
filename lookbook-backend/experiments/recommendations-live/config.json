@@ -1,0 +1,22 @@
+{
+  "runId": "2026-08-18T06-07-41-328Z",
+  "createdAt": "2026-08-18T06:07:41.404Z",
+  "splitDate": "median",
+  "k": 10,
+  "minTrain": 3,
+  "seed": 42,
+  "limitUsers": null,
+  "catalogSize": 185,
+  "evaluatedUsers": 1,
+  "strategies": [
+    "random",
+    "popularity",
+    "content-based",
+    "collaborative",
+    "hybrid",
+    "hybrid-no-content",
+    "hybrid-no-collaborative",
+    "hybrid-no-popularity"
+  ],
+  "dataSource": "experiments/dataset/snapshot-2026-08-18T06-07-14-348Z.json"
+}

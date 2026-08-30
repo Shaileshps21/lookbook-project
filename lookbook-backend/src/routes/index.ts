@@ -1,0 +1,64 @@
+import { Router } from "express";
+import authRoutes from "./authRoutes";
+import bookRoutes from "./bookRoutes";
+import categoryRoutes from "./categoryRoutes";
+import planRoutes from "./planRoutes";
+import cartRoutes from "./cartRoutes";
+import wishlistRoutes from "./wishlistRoutes";
+import orderRoutes from "./orderRoutes";
+import listingRoutes from "./listingRoutes";
+import userRoutes from "./userRoutes";
+import homepageRoutes from "./homepageRoutes";
+import adminRoutes from "./adminRoutes";
+import readingRoutes from "./readingRoutes";
+import webhookRoutes from "./webhookRoutes";
+import addressRoutes from "./addressRoutes";
+import sellerRoutes from "./sellerRoutes";
+import followRoutes from "./followRoutes";
+import shelfRoutes from "./shelfRoutes";
+import clubRoutes from "./clubRoutes";
+import threadRoutes from "./threadRoutes";
+import challengeRoutes from "./challengeRoutes";
+import uploadRoutes from "./uploadRoutes";
+import notificationRoutes from "./notificationRoutes";
+import assistantRoutes from "./assistantRoutes";
+import analyticsRoutes from "./analyticsRoutes";
+import publicRoutes from "./publicRoutes";
+import configRoutes from "./configRoutes";
+import couponRoutes from "./couponRoutes";
+
+const router = Router();
+
+router.get("/", (_req, res) => {
+  res.json({ success: true, message: "LookBook API is running." });
+});
+
+router.use("/auth", authRoutes);
+router.use("/books", bookRoutes);
+router.use("/categories", categoryRoutes);
+router.use("/plans", planRoutes);
+router.use("/cart", cartRoutes);
+router.use("/wishlist", wishlistRoutes);
+router.use("/orders", orderRoutes);
+router.use("/listings", listingRoutes);
+router.use("/users", userRoutes);
+router.use("/homepage", homepageRoutes);
+router.use("/admin", adminRoutes);
+router.use("/reading", readingRoutes);
+router.use("/webhooks", webhookRoutes);
+router.use("/addresses", addressRoutes);
+router.use("/seller", sellerRoutes);
+router.use("/follow", followRoutes);
+router.use("/shelves", shelfRoutes);
+router.use("/clubs", clubRoutes);
+router.use("/threads", threadRoutes);
+router.use("/challenges", challengeRoutes);
+router.use("/uploads", uploadRoutes);
+router.use("/notifications", notificationRoutes);
+router.use("/assistant", assistantRoutes);
+router.use("/analytics", analyticsRoutes);
+router.use("/public", publicRoutes);
+router.use("/config", configRoutes);
+router.use("/coupons", couponRoutes);
+
+export default router;

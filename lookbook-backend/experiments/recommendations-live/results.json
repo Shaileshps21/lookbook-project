@@ -1,0 +1,74 @@
+[
+  {
+    "strategy": "random",
+    "precisionAtK": 0,
+    "recallAtK": 0,
+    "ndcgAtK": 0,
+    "coverage": 0.05405405405405406,
+    "diversity": 0.4415268729362073,
+    "evaluatedUsers": 1
+  },
+  {
+    "strategy": "popularity",
+    "precisionAtK": 0.2,
+    "recallAtK": 0.6666666666666666,
+    "ndcgAtK": 0.49818925746641285,
+    "coverage": 0.021621621621621623,
+    "diversity": 0.4289271212546539,
+    "evaluatedUsers": 1
+  },
+  {
+    "strategy": "content-based",
+    "precisionAtK": 0,
+    "recallAtK": 0,
+    "ndcgAtK": 0,
+    "coverage": 0.05405405405405406,
+    "diversity": 0.25125409554776273,
+    "evaluatedUsers": 1
+  },
+  {
+    "strategy": "collaborative",
+    "precisionAtK": 0,
+    "recallAtK": 0,
+    "ndcgAtK": 0,
+    "coverage": 0,
+    "diversity": 0,
+    "evaluatedUsers": 1
+  },
+  {
+    "strategy": "hybrid",
+    "precisionAtK": 0.1,
+    "recallAtK": 0.3333333333333333,
+    "ndcgAtK": 0.2960819109658652,
+    "coverage": 0.05405405405405406,
+    "diversity": 0.333786616798113,
+    "evaluatedUsers": 1
+  },
+  {
+    "strategy": "hybrid-no-content",
+    "precisionAtK": 0.2,
+    "recallAtK": 0.6666666666666666,
+    "ndcgAtK": 0.49818925746641285,
+    "coverage": 0.05405405405405406,
+    "diversity": 0.415438597875025,
+    "evaluatedUsers": 1
+  },
+  {
+    "strategy": "hybrid-no-collaborative",
+    "precisionAtK": 0.1,
+    "recallAtK": 0.3333333333333333,
+    "ndcgAtK": 0.2960819109658652,
+    "coverage": 0.05405405405405406,
+    "diversity": 0.333786616798113,
+    "evaluatedUsers": 1
+  },
+  {
+    "strategy": "hybrid-no-popularity",
+    "precisionAtK": 0,
+    "recallAtK": 0,
+    "ndcgAtK": 0,
+    "coverage": 0.05405405405405406,
+    "diversity": 0.25125409554776273,
+    "evaluatedUsers": 1
+  }
+]

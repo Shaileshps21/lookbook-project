@@ -1,0 +1,186 @@
+id,title,author,category,tags,has_embedding,rating,reviewsCount
+"6a5f547eaf19ce02267e4ab3","Rich Dad Poor Dad","Robert Kiyosaki","Business",3,1,4.6,0
+"6a5f547eaf19ce02267e4ab5","Where The Crawdads Sing","Delia Owens","Fiction",2,1,5,1
+"6a5f547eaf19ce02267e4ab9","Diary of a Young Girl","Anne Frank","History",2,1,4.9,0
+"6a5f547eaf19ce02267e4ab4","Forest of a Thousand Lanterns","Julie C. Dao","Fiction",3,1,4.8,0
+"6a5f547eaf19ce02267e4ab2","The Psychology of Money","Morgan Housel","Business",3,1,4.9,0
+"6a5f547eaf19ce02267e4ab7","The Namesake","Jhumpa Lahiri","Fiction",2,1,4.6,0
+"6a5f547eaf19ce02267e4ab1","Deep Work","Cal Newport","Business",3,1,4.7,0
+"6a5f547eaf19ce02267e4ab8","It Ends With Us","Colleen Hoover","Romance",2,1,4.7,0
+"6a5f547eaf19ce02267e4ab6","I'll Be Gone In The Dark","Michelle McNamara","History",2,1,4.7,0
+"6a5f547eaf19ce02267e4ab0","Atomic Habits","James Clear","Self Help",3,1,5,17
+"6a604af7ac6dfb216963d7d3","Test Seller Book","Test Author","Fiction",1,1,4,1
+"6a6188cf93996bbdd829af60","The Summer I Turned Pretty Trilogy","Jenny Han","Fiction",6,1,0,0
+"6a6188d293996bbdd829af63","Shatter Me","Tahereh Mafi","Fiction",6,1,0,0
+"6a6188d393996bbdd829af66","The Silent Patient","Alex Michaelides","Fiction",6,1,0,0
+"6a6188d493996bbdd829af6a","The Cruel Prince","Holly Black","Fiction",6,1,0,0
+"6a6188d593996bbdd829af6e","Diary of a Wimpy Kid","Jeff Kinney","Fiction",6,1,0,0
+"6a6188d693996bbdd829af73","It Ends With Us","Colleen Hoover","Fiction",6,1,0,0
+"6a6188d893996bbdd829af77","Powerless","Lauren Roberts","Fiction",3,1,0,0
+"6a6188d993996bbdd829af7b","Unravel me","Tahereh Mafi","Fiction",6,1,0,0
+"6a6188db93996bbdd829af7f","The Summer I Turned Pretty","Jenny Han","Fiction",6,1,0,0
+"6a6188df93996bbdd829af83","The Eyes of Darkness","Dean Koontz","Fiction",6,1,0,0
+"6a6188e093996bbdd829af87","Red, White & Royal Blue","Casey McQuiston","Fiction",6,1,0,0
+"6a6188e093996bbdd829af8a","A Wizard of Earthsea","Ursula K. Le Guin","Fiction",6,1,0,0
+"6a6188e093996bbdd829af8d","They Both Die at the End","Adam Silvera","Fiction",6,1,0,0
+"6a6188e093996bbdd829af91","Caraval","Stephanie Garber","Fiction",6,1,0,0
+"6a6188e093996bbdd829af94","Мастер и Маргарита","Михаил Афанасьевич Булгаков","Fiction",6,1,0,0
+"6a6188e093996bbdd829af97","The Shining","Stephen King","Fiction",6,1,0,0
+"6a6188e193996bbdd829af9c","Haunting Adeline","H. D. Carlton","Fiction",6,1,0,0
+"6a6188e193996bbdd829afa0","La Peste","Albert Camus","Fiction",6,1,0,0
+"6a6188e193996bbdd829afa4","Anthem","Ayn Rand, classics jifara, Spectrum Spectrum Classics","Fiction",6,1,0,0
+"6a6188e193996bbdd829afa7","Interview With the Vampire","Anne Rice","Fiction",6,1,0,0
+"6a6188e193996bbdd829afac","The Outsiders","S. E. Hinton, Jim Fyfe, Jodi Picoult","Fiction",6,1,0,0
+"6a6188e293996bbdd829afb2","Atlas Shrugged (Centennial Ed. HC)","Ayn Rand, Sophie Bastide-Foltz, Adrian Rand","Fiction",6,1,0,0
+"6a6188e293996bbdd829afb5","The Silmarillion","J.R.R. Tolkien, Christopher Tolkien","Fiction",6,1,0,0
+"6a6188e293996bbdd829afb9","Misery","Stephen King","Fiction",6,1,0,0
+"6a6188e293996bbdd829afbd","The Fellowship of the Ring","J.R.R. Tolkien, Editorial Editorial World, Robert Robert Thompson","Fiction",6,1,0,0
+"6a6188e593996bbdd829afc5","Start with why","Simon Sinek","Business",6,1,0,0
+"6a6188e593996bbdd829afc8","Atomic Habits","James Clear","Business",6,1,0,0
+"6a6188e593996bbdd829afcb","Zero to One","Peter A. Thiel, Blake Masters","Business",6,1,0,0
+"6a6188e693996bbdd829afce","$100M Offers","Alex Hormozi","Business",2,1,0,0
+"6a6188e693996bbdd829afd1","Trading in the zone","Mark Douglas","Business",6,1,0,0
+"6a6188e693996bbdd829afd6","The Hard Thing About Hard Things","Ben Horowitz","Business",6,1,0,0
+"6a6188e693996bbdd829afdb","Think and Grow Rich","Napoleon Hill","Business",6,1,0,0
+"6a6188e693996bbdd829afde","Eat That Frog! 21 Great Ways to Stop Procrastinating and Get More Done in Less Time","Brian Tracy","Business",6,1,0,0
+"6a6188e793996bbdd829afe2","Never Split the Difference","Chris Voss, Tahl Raz","Business",6,1,0,0
+"6a6188e793996bbdd829afe7","The Obstacle is the Way","Ryan Holiday","Business",6,1,0,0
+"6a6188e793996bbdd829afea","Everybody Writes","Ann Handley","Business",6,1,0,0
+"6a6188e793996bbdd829afee","Entrepreneurship","Robert D. Hisrich","Business",6,1,0,0
+"6a6188e793996bbdd829aff2","Deep Work","Cal Newport","Business",6,1,0,0
+"6a6188e793996bbdd829aff5","Rework","Jason Fried, David Heinemeier Hansson","Business",6,1,0,0
+"6a6188e893996bbdd829affa","Beyond entrepreneurship","Collins, James C.","Business",4,1,0,0
+"6a6188e893996bbdd829affe","Drive","Daniel H. Pink","Business",6,1,0,0
+"6a6188e893996bbdd829b002","Improve Your Communication Skills","Alan Barker","Business",6,1,0,0
+"6a6188e893996bbdd829b006","The Unicorn Project","Gene Kim","Business",1,1,0,0
+"6a6188e893996bbdd829b00b","How to Make Money in Stocks","William J. O'Neil","Business",6,1,0,0
+"6a6188e993996bbdd829b00f","Convince them in 90 seconds or less","Nicholas Boothman","Business",6,1,0,0
+"6a6188e993996bbdd829b013","Crucial Conversations","Kerry Patterson, Joseph Grenny, Ron McMillan, Al Switzler, Stephen R. Covey","Business",6,1,0,0
+"6a6188e993996bbdd829b017","The Dip","Seth Godin","Business",6,1,0,0
+"6a6188e993996bbdd829b01a","The Millionaire Fastlane","M. J. DeMarco","Business",1,1,0,0
+"6a6188ea93996bbdd829b01f","Built to Last","Collins, James C., Jim Collins, Jerry I. Porras, James C. Collins","Business",6,1,0,0
+"6a6188ea93996bbdd829b022","Steve Jobs","Walter Isaacson","Business",6,1,0,0
+"6a6188f593996bbdd829b02a","Debt","David Graeber","History",6,1,0,0
+"6a6188f793996bbdd829b02d","A People's History of the United States","Howard Zinn","History",6,1,0,0
+"6a6188f993996bbdd829b030","Ringkasan sejarat filsafat","K. Bertens","History",2,1,0,0
+"6a6188fb93996bbdd829b035","The great conversation","Norman Melchert","History",6,1,0,0
+"6a6188fe93996bbdd829b039","Mga gunita ng himagsikan","Emilio Aguinaldo","History",1,1,0,0
+"6a6188ff93996bbdd829b03d","The Lessons of History","Will Durant, Ariel Durant","History",6,1,0,0
+"6a61890093996bbdd829b041","Freedom at Midnight","Dominique Lapierre, Larry Collins","History",6,1,0,0
+"6a61890193996bbdd829b045","Sapiens","Yuval Noah Harari","History",6,1,0,0
+"6a61890393996bbdd829b049","The Rise and Fall of the Third Reich","William L. Shirer","History",6,1,0,0
+"6a61890693996bbdd829b04d","Capitalist Realism","Mark Fisher, MARK FISHER","History",6,1,0,0
+"6a61890893996bbdd829b051","The story of art","E. H. Gombrich","History",6,1,0,0
+"6a61890b93996bbdd829b055","The Age of Revolution","Eric Hobsbawm","History",6,1,0,0
+"6a61890d93996bbdd829b059","Bumi Manusia","Pramoedya Ananta Toer","History",6,1,0,0
+"6a61891093996bbdd829b05d","A history of the modern world","R. R. Palmer, Palmer, Joel G. Colton","History",6,1,0,0
+"6a61891293996bbdd829b061","21 Lessons for the 21st Century","Yuval Noah Harari","History",6,1,0,0
+"6a61891493996bbdd829b065","Art","Frederick Hartt, Rosenthal","History",6,1,0,0
+"6a61891693996bbdd829b069","Postwar","Tony Judt","History",4,1,0,0
+"6a61891993996bbdd829b06d","The Unfinished Nation","Alan Brinkley","History",6,1,0,0
+"6a61891b93996bbdd829b071","The discovery of India","Jawaharlal Nehru","History",6,1,0,0
+"6a61891d93996bbdd829b075","Art history","Marilyn Stokstad, Margaret A. Oppenheimer","History",6,1,0,0
+"6a61891f93996bbdd829b079","Letters from a father to his daughter","Jawaharlal Nehru","History",6,1,0,0
+"6a61891f93996bbdd829b07c","The Enduring Vision","Paul S. Boyer","History",6,1,0,0
+"6a61891f93996bbdd829b07f","History of art","H. W. Janson, H.W Janson, H. W Janson, H. W. Janson, Horst Woldemar JANSON, Anthony F. Janson, H. W. Janson","History",6,1,0,0
+"6a61891f93996bbdd829b083","The Dawn of Everything","David Graeber, David Wengrow","History",6,1,0,0
+"6a61891f93996bbdd829b086","An echo in the darkness","Francine Rivers","History",6,1,0,0
+"6a61892193996bbdd829b08f","The Power of Your Subconscious Mind","Joseph Murphy","Self Help",4,1,0,0
+"6a61892193996bbdd829b092","Don't Believe Everything You Think","Joseph Nguyen","Self Help",2,1,0,0
+"6a61892293996bbdd829b095","12 Rules for Life","Jordan B. Peterson","Self Help",6,1,0,0
+"6a61892293996bbdd829b098","The Mountain Is You","Brianna Wiest","Self Help",6,1,0,0
+"6a61892293996bbdd829b09b","A Gentle Reminder","Bianca Sparacino","Self Help",6,1,0,0
+"6a61892293996bbdd829b0a0","When You're Ready, This Is How You Heal","Brianna Wiest","Self Help",1,1,0,0
+"6a61892393996bbdd829b0a8","101 Essays That Will Change The Way You Think","Brianna Wiest, Andrea Hernández González","Self Help",6,1,0,0
+"6a61892393996bbdd829b0ab","Psycho-cybernetics","Maxwell Maltz","Self Help",6,1,0,0
+"6a61892393996bbdd829b0af","嫌われる勇気","Ichirō Kishimi, Fumitake Koga","Self Help",6,1,0,0
+"6a61892393996bbdd829b0b4","You Are a Badass","Jen Sincero","Self Help",6,1,0,0
+"6a61892393996bbdd829b0b8","Control Your Mind and Master Your Feelings","Eric Robertson","Self Help",6,1,0,0
+"6a61892493996bbdd829b0bc","What every BODY is saying","Joe Navarro, Marvin Karlins","Self Help",6,1,0,0
+"6a61892493996bbdd829b0bf","Breaking the habit of being yourself","Joe Dispenza","Self Help",6,1,0,0
+"6a61892493996bbdd829b0c3","Workbook for the Mountain Is You","Smart Reads","Self Help",6,1,0,0
+"6a61892493996bbdd829b0c7","I Have to Tell You Something","Zara Bas","Self Help",6,1,0,0
+"6a61892593996bbdd829b0cc","Outwitting the devil","Napoleon Hill","Self Help",6,1,0,0
+"6a61892593996bbdd829b0d0","365 Days with Self-Discipline","Martin Meadows","Self Help",1,1,0,0
+"6a61892593996bbdd829b0d3","Lost Book of Herbal Remedies","Nicole Apelian, Davis, Claude, Sr.","Self Help",2,1,0,0
+"6a61892593996bbdd829b0d7","The untethered soul","Michael A. Singer","Self Help",6,1,0,0
+"6a61892593996bbdd829b0db","Tiny Habits","B. J. Fogg","Self Help",6,1,0,0
+"6a61892693996bbdd829b0e0","Dopamine Detox","Blake Rabizadeh","Self Help",1,1,0,0
+"6a61892693996bbdd829b0e3","The Rudest Book Ever","Shwetabh Gangwar","Self Help",6,1,0,0
+"6a61892693996bbdd829b0e7","You're Too Good to Feel This Bad","Nate Dallas","Self Help",6,1,0,0
+"6a61892693996bbdd829b0ec","The Compound effect","Darren Hardy","Self Help",6,1,0,0
+"6a61892793996bbdd829b0f0","Think Like a Monk","Jay Shetty","Self Help",6,1,0,0
+"6a61892993996bbdd829b0fa","Twisted Games","Ana Huang","Romance",6,1,0,0
+"6a61892993996bbdd829b0fd","Twisted Love","Ana Huang","Romance",6,1,0,0
+"6a61892993996bbdd829b100","Twisted Hate","Ana Huang","Romance",6,1,0,0
+"6a61892993996bbdd829b107","Punk 57","Penelope Douglas","Romance",6,1,0,0
+"6a61892a93996bbdd829b10c","It Starts with Us","Colleen Hoover","Romance",6,1,0,0
+"6a61892a93996bbdd829b10f","The Sweetest Oblivion","Danielle Lori","Romance",6,1,0,0
+"6a61892a93996bbdd829b112","Heated Rivalry","Rachel Reid","Romance",6,1,0,0
+"6a61892a93996bbdd829b116","Twisted Lies","Ana Huang","Romance",6,1,0,0
+"6a61892b93996bbdd829b11b","Corrupt","Penelope Douglas","Romance",6,1,0,0
+"6a61892b93996bbdd829b121","Breaking Point","Emma Darcy","Romance",4,1,0,0
+"6a61892d93996bbdd829b125","Devil and the Deep Sea","Sara Craven","Romance",2,1,0,0
+"6a61892e93996bbdd829b129","Hopeless","Colleen Hoover, Maialen Garagarza Urkia","Romance",4,1,0,0
+"6a61893193996bbdd829b12d","Before December","Joana Marcus","Romance",6,1,0,0
+"6a61893493996bbdd829b131","A Man Possessed","Penny Jordan","Romance",2,1,0,0
+"6a61893693996bbdd829b135","Destroy Me","Tahereh Mafi","Romance",6,1,0,0
+"6a61893993996bbdd829b139","Fever","Charlotte Lamb","Romance",2,1,0,0
+"6a61893b93996bbdd829b13d","Bought with His Name","Penny Jordan","Romance",1,1,0,0
+"6a61893d93996bbdd829b141","Uncertain Destiny","Carole Mortimer","Romance",2,1,0,0
+"6a61894093996bbdd829b145","The Marriage Deal","Sara Craven","Romance",2,1,0,0
+"6a61894293996bbdd829b149","Falcon's Prey","Penny Jordan","Romance",1,1,0,0
+"6a61894493996bbdd829b14d","To Speak of Love","Claudia Jameson","Romance",2,1,0,0
+"6a61894693996bbdd829b151","To Catch A Butterfly","Marjorie Lewty","Romance",5,1,0,0
+"6a61894893996bbdd829b155","Confirmed bachelor","Roberta Leigh","Romance",1,1,0,0
+"6a61894a93996bbdd829b159","Priest","Sierra Simone","Romance",2,1,0,0
+"6a61894d93996bbdd829b15f","King of Pride","Ana Huang","Romance",6,1,0,0
+"6a61895893996bbdd829b164","Biology","Neil Alexander Campbell","Science",6,1,0,0
+"6a61895893996bbdd829b167","The Fall of Hyperion","Dan Simmons","Science",5,1,0,0
+"6a61895993996bbdd829b16a","Death's End (The Three-Body Problem Series Book 3)","刘慈欣","Science",6,1,0,0
+"6a61895993996bbdd829b16d","Roadside Picnic","Аркадий Стругацкий, Борис Стругацкий, Arkady and Boris Strugatsky","Science",6,1,0,0
+"6a61895993996bbdd829b170","The Caves of Steel","Isaac Asimov","Science",6,1,0,0
+"6a61895993996bbdd829b173","The Foundation Trilogy","Isaac Asimov","Science",6,1,0,0
+"6a61895993996bbdd829b177","The Dark Forest (The Three-Body Problem Series Book 2)","刘慈欣","Science",6,1,0,0
+"6a61895993996bbdd829b17c","Nightfall","Isaac Asimov","Science",4,1,0,0
+"6a61895a93996bbdd829b17f","The Naked Sun","Isaac Asimov","Science",6,1,0,0
+"6a61895a93996bbdd829b182","I Have No Mouth and I Must Scream","Harlan Ellison","Science",3,1,0,0
+"6a61895a93996bbdd829b186","A short history of nearly everything","Bill Bryson","Science",6,1,0,0
+"6a61895a93996bbdd829b18e","Altered Carbon","Richard K. Morgan","Science",6,1,0,0
+"6a61895b93996bbdd829b193","God Emperor of Dune","Frank Herbert","Science",6,1,0,0
+"6a61895b93996bbdd829b196","The Mote in God's Eye","Larry Niven, Jerry Pournelle, L.J. Ganser","Science",6,1,0,0
+"6a61895b93996bbdd829b19a","Dune Messiah","Frank Herbert","Science",6,1,0,0
+"6a61895b93996bbdd829b19e","2001","Arthur C. Clarke","Science",6,1,0,0
+"6a61895c93996bbdd829b1a2","The End of Eternity","Isaac Asimov","Science",6,1,0,0
+"6a61895c93996bbdd829b1a6","Project Hail Mary","Andy Weir","Science",6,1,0,0
+"6a61895c93996bbdd829b1aa","The Stars, Like Dust","Isaac Asimov","Science",6,1,0,0
+"6a61895c93996bbdd829b1ae","Friday","Robert A. Heinlein","Science",6,1,0,0
+"6a61895d93996bbdd829b1b2","Endymion","Dan Simmons","Science",4,1,0,0
+"6a61895d93996bbdd829b1b6","Lucifer's Hammer","Larry Niven, Jerry Pournelle","Science",5,1,0,0
+"6a61895d93996bbdd829b1b9","Microbiology","Gerard J. Tortora, Berdell R. Funke, Christine L. Case","Science",6,1,0,0
+"6a61895d93996bbdd829b1bd","Artemis","Andy Weir","Science",6,1,0,0
+"6a61895e93996bbdd829b1c2","The Currents of Space","Isaac Asimov","Science",6,1,0,0
+"6a618eee025c9cae0526572c","And Then There Were None","Agatha Christie","Fiction",6,1,0,0
+"6a618ef2025c9cae0526572f","Murder on the Orient Express","Agatha Christie","Fiction",6,1,0,0
+"6a618ef6025c9cae05265732","The A.B.C. Murders","Agatha Christie","Fiction",6,1,0,0
+"6a618ef8025c9cae05265735","Death on the Nile","Agatha Christie","Fiction",6,1,0,0
+"6a618efa025c9cae05265738","After the Funeral","Agatha Christie","Fiction",6,1,0,0
+"6a618efc025c9cae0526573b","The Body in the Library","Agatha Christie","Fiction",6,1,0,0
+"6a618efe025c9cae0526573e","Murder in Three Acts","Agatha Christie","Fiction",6,1,0,0
+"6a618f02025c9cae05265741","4:50 from Paddington","Agatha Christie","Fiction",6,1,0,0
+"6a618f05025c9cae05265744","Sleeping Murder","Agatha Christie","Fiction",6,1,0,0
+"6a618f09025c9cae05265747","Five Little Pigs","Agatha Christie","Fiction",6,1,0,0
+"6a618f0c025c9cae0526574a","Hercule Poirot's Christmas","Agatha Christie","Fiction",6,1,0,0
+"6a618f0d025c9cae0526574d","The Mirror Crack'd from Side to Side","Agatha Christie","Fiction",6,1,0,0
+"6a618f0e025c9cae05265750","Evil Under the Sun","Agatha Christie","Fiction",6,1,0,0
+"6a618f0e025c9cae05265753","Hallowe'en Party","Agatha Christie","Fiction",6,1,0,0
+"6a618f0e025c9cae05265756","Death in the Clouds","Agatha Christie","Fiction",6,1,0,0
+"6a618f0f025c9cae05265759","Peril at End House","Agatha Christie","Fiction",6,1,0,0
+"6a618f10025c9cae0526575c","A Murder Is Announced","Agatha Christie","Fiction",6,1,0,0
+"6a618f10025c9cae0526575f","At Bertram's Hotel","Agatha Christie","Fiction",6,1,0,0
+"6a618f10025c9cae05265762","Crooked House","Agatha Christie","Fiction",6,1,0,0
+"6a618f11025c9cae05265765","Appointment with Death","Agatha Christie","Fiction",6,1,0,0
+"6a618f11025c9cae05265768","Cards on the Table","Agatha Christie","Fiction",6,1,0,0
+"6a618f12025c9cae0526576b","Murder in Mesopotamia","Agatha Christie","Fiction",6,1,0,0
+"6a618f13025c9cae0526576e","A Caribbean Mystery","Agatha Christie","Fiction",6,1,0,0
+"6a618f13025c9cae05265771","The Moving Finger","Agatha Christie","Fiction",6,1,0,0
