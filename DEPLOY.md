@@ -79,7 +79,7 @@ Go to https://render.com → Sign up (use your GitHub account for easy integrati
 | **Branch**       | `main`                         |
 | **Root Directory** | `lookbook-backend`           |
 | **Runtime**      | `Node`                         |
-| **Build Command**| `npm install && npm run build` |
+| **Build Command**| `npm install --include=dev && npm run build` |
 | **Start Command**| `node dist/server.js`          |
 | **Instance Type**| `Free`                         |
 
@@ -445,6 +445,17 @@ npm run push:keys
 ### ❌ Backend Build Fails on Render
 - Check Render build logs — usually a TypeScript error
 - Run `npm run build` locally first to catch errors before pushing
+- **If the log shows dozens of `Cannot find name 'console'/'fetch'/'Buffer'` or
+  `Could not find a declaration file for module 'express'` errors**: this is
+  `NODE_ENV=production` (required, see above) causing `npm install` to skip
+  `devDependencies` on a *fresh* install — and `typescript`/`@types/*` are all
+  devDependencies here. It won't reproduce locally (your shell isn't running
+  `NODE_ENV=production`) and can even look intermittent on Render itself,
+  since a cache-hit install ("up to date, audited N packages") reuses
+  whatever was installed last time while a cache-miss install re-applies the
+  skip. Fixed by making the Build Command `npm install --include=dev && npm
+  run build` (already reflected in Step 1.2 above) so devDependencies always
+  install regardless of `NODE_ENV`.
 
 ### ❌ MongoNetworkError — DB Connection Fails
 - **This is the most common issue on Render free tier**
