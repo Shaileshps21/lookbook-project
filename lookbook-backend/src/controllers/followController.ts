@@ -6,6 +6,7 @@ import { Follow } from "../models/Follow";
 import { Review } from "../models/Review";
 import { User } from "../models/User";
 import { UserActivity } from "../models/UserActivity";
+import { notify } from "../utils/notify";
 
 export const followUser = asyncHandler(async (req: Request, res: Response) => {
   if (!req.user) throw ApiError.unauthorized();
@@ -16,11 +17,19 @@ export const followUser = asyncHandler(async (req: Request, res: Response) => {
   const target = await User.findById(userId);
   if (!target) throw ApiError.notFound("User not found");
 
+  const alreadyFollowing = await Follow.exists({ follower: req.user.id, following: userId });
+
   await Follow.findOneAndUpdate(
     { follower: req.user.id, following: userId },
     { follower: req.user.id, following: userId },
     { upsert: true }
   );
+
+  // Only notify on a genuinely new follow — the upsert above is otherwise a
+  // harmless no-op on a repeat call, and shouldn't spam a duplicate notification.
+  if (!alreadyFollowing) {
+    notify(userId, "community.follow", "New follower", `${req.user.name} started following you.`, `/u/${req.user.id}`);
+  }
 
   return ApiResponse.ok(res, null, "Followed");
 });
@@ -32,6 +41,19 @@ export const unfollowUser = asyncHandler(async (req: Request, res: Response) => 
   await Follow.deleteOne({ follower: req.user.id, following: userId });
 
   return ApiResponse.ok(res, null, "Unfollowed");
+});
+
+/** The mirror of unfollow — removes someone *following you* rather than
+ * someone you follow. Follow has no concept of mutual consent (anyone can
+ * follow anyone with a public-enough profile), so this is the only lever a
+ * user has over who shows up in their own followers list. */
+export const removeFollower = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.user) throw ApiError.unauthorized();
+
+  const { userId } = req.params;
+  await Follow.deleteOne({ follower: userId, following: req.user.id });
+
+  return ApiResponse.ok(res, null, "Removed");
 });
 
 export const getFollowCounts = asyncHandler(async (req: Request, res: Response) => {

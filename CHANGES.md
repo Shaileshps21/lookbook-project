@@ -6,6 +6,182 @@ frontend↔backend wiring documented at the bottom of this file.
 
 ---
 
+## 🫂 Session Update — 2026-09-04/05: Community & Clubs rebuilt into a real social layer (per `community_plan.md`), plus followers/following management and the browser-tab favicon
+
+Built out `community_plan.md`'s Features A–E in full (F, the unified cross-club
+feed, is explicitly stretch and left for later): club posts gained real
+content/images/likes, a people directory, a much richer public profile,
+and a complete rebuild of Reading Challenges — the section the user
+specifically flagged as "too useless." Also added, per two follow-up
+requests mid-session: followers/following list management (view + remove
+in both directions) on the profile page, and a proper orange-book favicon
+matching the header logo. Live-tested end-to-end in Chrome throughout,
+including real cross-account interactions (two throwaway accounts) to
+verify notifications actually reach the other person, not just the actor.
+
+### Feature A — Club posts are real posts now (content, images, likes)
+`Thread` was title-only before — every actual word of a "post" lived in the
+comments underneath a bare headline. `Thread.content`/`images[]`/`likesCount`
+added (existing pre-migration threads render with an empty body — no
+migration needed, `ClubDetail`/`ThreadDetail` fall back to the title).
+`Comment.likesCount` added too. New generic `Like` model
+(`{user, targetType: "thread"|"comment", target}`, unique-indexed) backs new
+`POST/DELETE /threads/:id/like` and `/threads/comments/:id/like` — find-then-
+create rather than create-and-catch-duplicate (same idempotent shape
+`challengeController`'s badge award already used), so a double-tap the UI
+already prevents optimistically is a harmless no-op. Liking/commenting fires
+`community.like`/`community.comment` notifications to the post/comment
+author (self-notify suppressed).
+- `ClubDetail.tsx` — the composer is now a real post box (textarea + up to 4
+  photos via the existing `/uploads/image` endpoint, `skipQualityCheck=true`
+  since a club photo isn't a book cover and shouldn't be judged like one) and
+  the feed renders as actual cards (avatar, body, images, like button,
+  comment count) instead of a bare clickable title list.
+- `ThreadDetail.tsx` — shows the post body/images and a like button on both
+  the post and every comment.
+- New shared `LikeButton` component (optimistic toggle, reverts on failure).
+- Tests: `communityLikes.test.ts` (6 cases — content required, like/unlike
+  round-trip, idempotent double-like, comment likes are independent of post
+  likes, delete cascades to likes).
+
+### Feature B — People directory ("Find Readers")
+`GET /users/directory` generalizes the exact privacy filter
+`followController.getSuggestedUsers` already used (public-profile-only,
+excludes the viewer) into a real searchable/sortable/paginated browse page —
+new `Community.tsx` at `/community`, linked from the navbar and from
+`CommunitySettings`. Search by name, sort by followers/badges/newest, inline
+follow/unfollow. Tests: `usersDirectory.test.ts` (4 cases — privacy filter,
+search, `isFollowing` reflects the viewer, works logged-out).
+
+### Feature C — Public profile, enriched
+`getPublicProfile` now also returns: a public-safe slice of the same reading-
+stats computation the private dashboard uses (streak, favourite genres,
+recent genre/monthly breakdown — factored out into a shared
+`utils/readingStats.ts` so the Mongo aggregation exists in exactly one
+place), badges, up to 3 in-progress (not yet completed) joined challenges
+with live progress, clubs the person belongs to, and up to 4 mutual
+followers. `PublicProfile.tsx` redesigned to show all of it, including a
+"Join this challenge too" funnel straight from a friend's profile into a
+challenge (correctly hidden on your own profile — everything in your own
+"currently reading toward" list is by definition already joined, a real bug
+caught live-testing before this wrote it up). Tests:
+`publicProfileEnriched.test.ts` (5 cases, including one that caught a real
+bug: `Badge.challenge` is populated for display, so matching completed-
+challenge ids needs `.id`, not `.toString()` on the populated document —
+using `.toString()` there silently matched nothing and left completed
+challenges stuck in "in progress").
+
+### Feature D — Reading Challenges, rebuilt
+The actual "too useless" fix. Previously every logged-in user was implicitly
+"in" every challenge (no join step), so the leaderboard felt random and a
+"My Challenges" view couldn't exist. Now:
+- New `ChallengeParticipant` model is the explicit join/leave record.
+  `POST/DELETE /challenges/:id/join`. Checking progress auto-joins (an
+  unambiguous intent signal — an extra confirm click first would just be
+  friction).
+- Any logged-in user can create a challenge — platform-wide or scoped to a
+  club they belong to (`Challenge.club`, membership-checked at creation).
+  `Challenge.official` exists for admin-authored ones ("LookBook Official"
+  badge in the UI) but a non-admin's request silently drops the flag rather
+  than erroring.
+- `Challenge.type: "books" | "genre" | "pages"` — `"genre"` actually filters
+  progress to one category (`utils/challengeProgress.ts`, shared by the
+  single-challenge progress check and the public-profile batch view).
+  `"pages"` is schema-ready but has no real per-page signal in this app yet,
+  so it's deliberately not offered in the create form — no point shipping a
+  selector that behaves identically to "books" and quietly misleads.
+- Leaderboard now ranks joined participants only, includes the viewer's own
+  rank even outside the top 20 ("you're #34" beats silently not appearing),
+  and the background `leaderboardQueue` cache job was updated to match the
+  same participant-restricted, genre-aware definition so the cached and
+  live paths never disagree.
+- `Challenges.tsx` redesigned: Discover / My Challenges / Completed / Create
+  tabs, a progress **ring** instead of the old thin bar, a podium (top 3,
+  avatars) above the leaderboard list, real badge cards (icon + title +
+  challenge + date) instead of inert text pills, and a one-time celebration
+  toast the first time `getMyChallengeProgress` reports `justCompleted`.
+  `ClubDetail.tsx` gained a "Club Challenges" strip using the same card.
+- Tests: `challengeParticipants.test.ts` (7 cases — non-admin creation,
+  official flag admin-only, join/leave toggles `participantsCount`,
+  club-scoped creation requires membership, auto-join + exactly-once badge
+  award, genre-type filtering, leaderboard excludes non-joiners and still
+  surfaces the viewer unranked).
+
+### Followers / following management (user-requested mid-session)
+The profile page had follow *counts* but no way to see or manage who's in
+either list. New `DELETE /follow/followers/:userId` (the mirror of unfollow
+— removes someone following *you*, since Follow has no mutual-consent
+concept and this is the only lever you have over your own followers list).
+`followUser` now also fires a `community.follow` notification on a
+genuinely new follow (checked via a pre-upsert existence check, not fired on
+a repeat call). New `FollowListModal` (tabbed Followers/Following, Remove/
+Unfollow per row, live count refresh) opens from the clickable follower/
+following counts in `CommunitySettings` (Community tab, Profile page).
+Tests: `followManagement.test.ts` (5 cases — notify-once, unfollow reflects
+on both sides, remove-follower doesn't need the follower's cooperation,
+no-op on a non-follower, auth required).
+
+### Favicon (user-requested mid-session)
+`public/favicon.svg` (referenced by `index.html`, `manifest.webmanifest`,
+and the apple-touch-icon link — one file, one edit) replaced with an orange
+open-book icon matching the header logo's exact Lucide `BookOpen` glyph,
+swapped in for the old generic purple abstract mark.
+
+### Verification
+- Backend: `tsc --noEmit` clean, eslint 0 new errors (5 pre-existing
+  dev-tooling warnings, unchanged). Jest **100/100** (was 73; +27 across 5
+  new test files), all passing including a full unfiltered run.
+- Frontend: `tsc -b` clean, eslint 0 errors/warnings. Vitest **14/14**
+  unchanged. `vite build` succeeds — shared main bundle unchanged at
+  ~419 kB/132 kB gzip; `Profile` (now includes `FollowListModal`) grew
+  ~3 kB; new route chunks (`Community`, `CreateChallengeForm`) are their own
+  lazy chunks.
+- Live-tested in Chrome against the real dev backend (localhost, pointed at
+  the same Atlas cluster this project's local/dev sessions have always
+  used) with two throwaway accounts: registered both, made profiles public,
+  created a club, posted with an uploaded photo, liked/commented across
+  accounts, created and joined a challenge from both the Discover tab and a
+  club's own strip, watched the leaderboard and progress ring update,
+  browsed and searched the People directory, opened a real existing public
+  profile (genre taste, clubs, and reviews all rendered correctly against
+  real data), and confirmed all three notification types
+  (`community.follow`/`community.like`/`community.comment`) actually landed
+  in the *other* account's bell — not just fired without a recipient check.
+  Followers/following management verified in both directions (Unfollow from
+  the Following tab, Remove from the Followers tab), including a live
+  reload that caught a stale-HMR false negative (the modal briefly didn't
+  render as clickable after a mid-session edit — resolved by a hard reload,
+  not a code issue).
+
+### Observed but not investigated further
+Two things happened mid-session that don't trace back to any code path this
+session touched, most likely explained by this project's previously-
+documented Atlas connectivity flakiness (see the 2026-08-28 "SSL alert
+number 80" entry below) rather than anything new:
+- A test club created and interacted with successfully (post, like, reload-
+  verified) was gone — confirmed via a direct DB query, not just the API —
+  a few minutes later with no delete call ever made.
+- One throwaway test account's stored name changed from "Alice Reader" (as
+  registered, and as rendered right after registration) to "Alice" with no
+  `PATCH /users/me` call in this session's history.
+
+Neither affects the features above (both accounts and clubs used for
+verification worked correctly once re-created/observed). Not fixed because
+neither is reproducible on demand and both are consistent with known
+cluster-level flakiness already documented in this file, not application
+code.
+
+### What's left
+- `community_plan.md`'s Feature F (a unified feed merging club posts +
+  challenge completions into `Feed.tsx`) — explicitly stretch, not started.
+- A manual visual pass on a phone-sized viewport wasn't done this session
+  (everything above was checked at desktop width).
+- `.env` files (both apps) were switched to local-dev values for this
+  session's testing and switched back to their original production values
+  before finishing — no lasting change there.
+
+---
+
 ## 🚀 Session Update — 2026-08-31: Render deploy was broken since the previous session; fixed build + Google OAuth redirect
 
 Live-tested the Render backend and Vercel frontend (`https://lookbookstore.vercel.app`)

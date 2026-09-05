@@ -270,6 +270,21 @@ export interface PublicUser {
   avatar?: string;
 }
 
+export interface PublicReadingStats {
+  streak: number;
+  booksRead: number;
+  favouriteGenres: string[];
+  genreBreakdown: { genre: string; count: number }[];
+  monthlyBooks: { month: string; count: number }[];
+}
+
+export interface PublicChallengeProgress {
+  id: string;
+  title: string;
+  target: number;
+  progress: number;
+}
+
 export interface PublicProfile {
   user: PublicUser;
   followers: number;
@@ -277,6 +292,22 @@ export interface PublicProfile {
   isFollowing: boolean;
   shelves: Shelf[];
   reviews: Review[];
+  readingStats: PublicReadingStats;
+  badges: Badge[];
+  challengesInProgress: PublicChallengeProgress[];
+  clubs: { id: string; name: string }[];
+  mutualFollowers: { id: string; name: string }[];
+  mutualFollowersCount: number;
+}
+
+export interface DirectoryUser {
+  id: string;
+  name: string;
+  avatar?: string;
+  topGenre: string | null;
+  followers: number;
+  badgesCount: number;
+  isFollowing: boolean;
 }
 
 export interface Club {
@@ -304,10 +335,14 @@ export interface ClubInvitePreview {
 export interface Thread {
   id: string;
   title: string;
+  content: string;
+  images: string[];
   author: PublicUser;
   club?: string;
   book?: string;
   commentsCount: number;
+  likesCount: number;
+  likedByMe: boolean;
   createdAt: string;
 }
 
@@ -316,23 +351,36 @@ export interface Comment {
   thread: string;
   author: PublicUser;
   content: string;
+  likesCount: number;
+  likedByMe: boolean;
   createdAt: string;
 }
+
+export type ChallengeType = "books" | "genre" | "pages";
 
 export interface Challenge {
   id: string;
   title: string;
   description: string;
+  type: ChallengeType;
+  genre?: string;
   target: number;
   periodStart: string;
   periodEnd: string;
   active: boolean;
+  club?: { id: string; name: string };
+  createdBy?: { id: string; name: string };
+  official: boolean;
+  participantsCount: number;
+  joined: boolean;
+  awardedAt?: string | null;
 }
 
 export interface ChallengeProgress {
   progress: number;
   target: number;
   completed: boolean;
+  justCompleted?: boolean;
   awardedAt: string | null;
 }
 
@@ -348,4 +396,16 @@ export interface LeaderboardRow {
   name: string;
   avatar?: string;
   booksFinished: number;
+  rank: number;
+}
+
+export interface LeaderboardData {
+  rows: LeaderboardRow[];
+  viewerRank: LeaderboardRow | null;
+  totalParticipants: number;
+}
+
+export interface MyChallenges {
+  active: Challenge[];
+  completed: Challenge[];
 }

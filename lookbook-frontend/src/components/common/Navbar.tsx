@@ -15,6 +15,7 @@ const links = [
   { label: "Plans", to: "/plans" },
   { label: "Clubs", to: "/clubs" },
   { label: "Challenges", to: "/challenges" },
+  { label: "Community", to: "/community" },
 ];
 
 const Navbar = () => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import {
   MessageSquare,
@@ -14,10 +14,15 @@ import {
   QrCode,
   RefreshCw,
   Check,
+  Image as ImageIcon,
+  Trophy,
 } from "lucide-react";
 import QRCode from "qrcode";
 import Loader from "../components/common/Loader";
 import Button from "../components/common/Button";
+import LikeButton from "../components/community/LikeButton";
+import ChallengeCard from "../components/community/ChallengeCard";
+import CreateChallengeForm from "../components/community/CreateChallengeForm";
 import { useAuth } from "../hooks/useAuth";
 import {
   fetchClubById,
@@ -29,18 +34,26 @@ import {
   regenerateInviteLink,
   toggleInviteEnabled,
 } from "../services/clubService";
-import { fetchThreadsForClub, createThread } from "../services/threadService";
-import type { Club, Thread } from "../types";
+import { fetchThreadsForClub, createThread, likeThread, unlikeThread } from "../services/threadService";
+import { fetchChallenges } from "../services/challengeService";
+import { uploadImage } from "../services/uploadService";
+import { ApiClientError } from "../services/apiClient";
+import type { Club, Thread, Challenge } from "../types";
 
 const ClubDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const [club, setClub] = useState<Club | null>(null);
   const [threads, setThreads] = useState<Thread[]>([]);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
-  const [title, setTitle] = useState("");
+  const [postContent, setPostContent] = useState("");
+  const [postImages, setPostImages] = useState<string[]>([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [postError, setPostError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [deleted, setDeleted] = useState(false);
   const [editing, setEditing] = useState(false);
   const [editName, setEditName] = useState("");
@@ -50,14 +63,16 @@ const ClubDetail = () => {
   const [qrOpen, setQrOpen] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [regenerateConfirming, setRegenerateConfirming] = useState(false);
+  const [creatingChallenge, setCreatingChallenge] = useState(false);
 
   const load = () => {
     if (!id) return;
     setLoading(true);
-    Promise.all([fetchClubById(id), fetchThreadsForClub(id)])
-      .then(([clubData, threadData]) => {
+    Promise.all([fetchClubById(id), fetchThreadsForClub(id), fetchChallenges(id)])
+      .then(([clubData, threadData, challengeData]) => {
         setClub(clubData);
         setThreads(threadData);
+        setChallenges(challengeData);
       })
       .catch(() => setClub(null))
       .finally(() => setLoading(false));
@@ -186,17 +201,46 @@ const ClubDetail = () => {
     }
   };
 
-  const handleCreateThread = async () => {
-    if (!title.trim()) return;
-    setBusy(true);
+  const handleImageSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (postImages.length >= 4) {
+      setPostError("Up to 4 photos per post.");
+      return;
+    }
+    setPostError("");
+    setUploadingImage(true);
     try {
-      await createThread({ title: title.trim(), clubId: id });
-      setTitle("");
+      const url = await uploadImage(file, true);
+      setPostImages((prev) => [...prev, url]);
+    } catch (err) {
+      setPostError(err instanceof ApiClientError ? err.message : "Couldn't upload the photo.");
+    } finally {
+      setUploadingImage(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  };
+
+  const handleCreatePost = async () => {
+    if (!postContent.trim()) return;
+    setBusy(true);
+    setPostError("");
+    try {
+      const title = postContent.trim().length > 60 ? `${postContent.trim().slice(0, 57)}...` : postContent.trim();
+      await createThread({ title, content: postContent.trim(), images: postImages, clubId: id });
+      setPostContent("");
+      setPostImages([]);
       setFormOpen(false);
       load();
+    } catch (err) {
+      setPostError(err instanceof ApiClientError ? err.message : "Couldn't post.");
     } finally {
       setBusy(false);
     }
+  };
+
+  const handleThreadLikeToggled = (threadId: string, liked: boolean, count: number) => {
+    setThreads((prev) => prev.map((t) => (t.id === threadId ? { ...t, likedByMe: liked, likesCount: count } : t)));
   };
 
   return (
@@ -266,10 +310,10 @@ const ClubDetail = () => {
             <div className="mt-5 pt-5 border-t border-slate-100 space-y-2">
               {club.members.map((member) => (
                 <div key={member.id} className="flex items-center justify-between text-sm">
-                  <span className="text-slate-700">
+                  <Link to={`/u/${member.id}`} className="text-slate-700 hover:text-amber-600">
                     {member.name}
                     {member.id === club.owner.id && <span className="ml-2 text-xs text-amber-600 font-semibold">Owner</span>}
-                  </span>
+                  </Link>
                   {canManage && member.id !== club.owner.id && (
                     <button
                       onClick={() => handleRemoveMember(member.id)}
@@ -355,46 +399,161 @@ const ClubDetail = () => {
         </div>
 
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-slate-900">Discussion Threads</h2>
+          <h2 className="font-bold text-slate-900 flex items-center gap-2">
+            <Trophy size={16} className="text-amber-500" /> Club Challenges
+          </h2>
+          {user && isMember && (
+            <Button
+              size="sm"
+              variant="outline"
+              icon={creatingChallenge ? <X size={14} /> : <Plus size={14} />}
+              onClick={() => setCreatingChallenge((v) => !v)}
+            >
+              New Challenge
+            </Button>
+          )}
+        </div>
+
+        {creatingChallenge && (
+          <div className="mb-6">
+            <CreateChallengeForm
+              defaultClubId={id}
+              onCreated={() => {
+                setCreatingChallenge(false);
+                load();
+              }}
+              onCancel={() => setCreatingChallenge(false)}
+            />
+          </div>
+        )}
+
+        {challenges.length === 0 ? (
+          <p className="text-slate-400 text-sm mb-8">
+            No challenges running for this club yet.{" "}
+            <Link to="/challenges" className="text-amber-600 font-semibold hover:underline">
+              Browse all challenges
+            </Link>
+            .
+          </p>
+        ) : (
+          <div className="grid sm:grid-cols-2 gap-4 mb-10">
+            {challenges.map((challenge) => (
+              <ChallengeCard key={challenge.id} challenge={challenge} onChanged={load} />
+            ))}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-bold text-slate-900">Club Feed</h2>
           {user && isMember && (
             <Button size="sm" variant="outline" icon={formOpen ? <X size={14} /> : <Plus size={14} />} onClick={() => setFormOpen((v) => !v)}>
-              New Thread
+              New Post
             </Button>
           )}
         </div>
 
         {formOpen && (
-          <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-4 mb-6 flex gap-2">
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Thread title"
-              className="flex-1 px-4 py-2 text-sm rounded-xl border border-slate-200 outline-none focus:border-amber-400"
+          <div className="bg-white rounded-2xl border border-amber-100 shadow-sm p-4 mb-6">
+            <textarea
+              value={postContent}
+              onChange={(e) => setPostContent(e.target.value)}
+              placeholder="Share something with the club..."
+              rows={3}
+              className="w-full px-4 py-2 text-sm rounded-xl border border-slate-200 outline-none focus:border-amber-400 resize-none"
+              maxLength={3000}
             />
-            <Button size="sm" onClick={handleCreateThread} disabled={busy}>
-              Post
-            </Button>
+
+            {postImages.length > 0 && (
+              <div className="flex flex-wrap gap-2 mt-3">
+                {postImages.map((src) => (
+                  <div key={src} className="relative">
+                    <img src={src} alt="" className="w-20 h-20 rounded-xl object-cover" />
+                    <button
+                      onClick={() => setPostImages((prev) => prev.filter((i) => i !== src))}
+                      className="absolute -right-1.5 -top-1.5 w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center"
+                    >
+                      <X size={11} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {postError && <p className="text-red-500 text-xs mt-2">{postError}</p>}
+
+            <div className="flex items-center justify-between mt-3">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingImage || postImages.length >= 4}
+                className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-amber-600 transition disabled:opacity-50"
+              >
+                <ImageIcon size={15} /> {uploadingImage ? "Uploading..." : "Add Photo"}
+              </button>
+              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageSelect} />
+              <Button size="sm" onClick={handleCreatePost} disabled={busy || !postContent.trim()}>
+                Post
+              </Button>
+            </div>
           </div>
         )}
 
         {threads.length === 0 ? (
-          <p className="text-slate-400 text-sm">No discussion threads yet.</p>
+          <p className="text-slate-400 text-sm">No posts yet. Be the first to share something.</p>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {threads.map((thread) => (
-              <Link
-                key={thread.id}
-                to={`/threads/${thread.id}`}
-                className="bg-white rounded-2xl border border-amber-100 shadow-sm p-4 flex items-center justify-between hover:border-amber-300 transition"
-              >
-                <div>
-                  <p className="font-medium text-slate-800">{thread.title}</p>
-                  <p className="text-xs text-slate-400 mt-1">by {thread.author.name}</p>
+              <div key={thread.id} className="bg-white rounded-2xl border border-amber-100 shadow-sm p-5">
+                <div className="flex items-center gap-3 mb-3">
+                  {thread.author.avatar ? (
+                    <img src={thread.author.avatar} alt={thread.author.name} className="w-9 h-9 rounded-full object-cover" />
+                  ) : (
+                    <span className="w-9 h-9 rounded-full bg-amber-500 text-white flex items-center justify-center text-sm font-bold">
+                      {thread.author.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <div>
+                    <Link to={`/u/${thread.author.id}`} className="font-semibold text-slate-800 text-sm hover:text-amber-600">
+                      {thread.author.name}
+                    </Link>
+                    <p className="text-[11px] text-slate-400">{new Date(thread.createdAt).toLocaleDateString()}</p>
+                  </div>
                 </div>
-                <span className="flex items-center gap-1 text-xs text-slate-400">
-                  <MessageSquare size={13} /> {thread.commentsCount}
-                </span>
-              </Link>
+
+                {thread.content ? (
+                  <p className="text-slate-700 text-sm whitespace-pre-wrap">{thread.content}</p>
+                ) : (
+                  <p className="font-medium text-slate-800 text-sm">{thread.title}</p>
+                )}
+
+                {thread.images.length > 0 && (
+                  <div className={`grid gap-2 mt-3 ${thread.images.length > 1 ? "grid-cols-2" : "grid-cols-1"}`}>
+                    {thread.images.map((src) => (
+                      <img key={src} src={src} alt="" className="rounded-xl w-full max-h-72 object-cover" />
+                    ))}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-50">
+                  <LikeButton
+                    liked={thread.likedByMe}
+                    count={thread.likesCount}
+                    onLike={async () => {
+                      const count = await likeThread(thread.id);
+                      handleThreadLikeToggled(thread.id, true, count);
+                      return count;
+                    }}
+                    onUnlike={async () => {
+                      const count = await unlikeThread(thread.id);
+                      handleThreadLikeToggled(thread.id, false, count);
+                      return count;
+                    }}
+                    disabled={!user}
+                  />
+                  <Link to={`/threads/${thread.id}`} className="flex items-center gap-1 text-xs text-slate-400 hover:text-amber-600 transition">
+                    <MessageSquare size={13} /> {thread.commentsCount} comments
+                  </Link>
+                </div>
+              </div>
             ))}
           </div>
         )}

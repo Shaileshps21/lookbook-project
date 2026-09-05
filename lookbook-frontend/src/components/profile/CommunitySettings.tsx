@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Globe, Lock, Users, Award } from "lucide-react";
+import { Globe, Lock, Users, Award, Search } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { updatePublicProfileSetting } from "../../services/userService";
 import { fetchFollowCounts, type FollowCounts } from "../../services/followService";
+import FollowListModal from "./FollowListModal";
 
 const CommunitySettings = () => {
   const { user, setUser } = useAuth();
   const [saving, setSaving] = useState(false);
   const [counts, setCounts] = useState<FollowCounts | null>(null);
+  const [listTab, setListTab] = useState<"followers" | "following" | null>(null);
 
-  useEffect(() => {
+  const loadCounts = () => {
     if (!user) return;
     fetchFollowCounts(user.id)
       .then(setCounts)
       .catch(() => setCounts(null));
+  };
+
+  useEffect(() => {
+    loadCounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   if (!user) return null;
@@ -37,9 +44,17 @@ const CommunitySettings = () => {
 
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-4 text-sm text-slate-600">
-          <span className="flex items-center gap-1.5">
-            <Users size={15} /> {counts?.followers ?? 0} followers · {counts?.following ?? 0} following
-          </span>
+          <button
+            onClick={() => setListTab("followers")}
+            className="flex items-center gap-1.5 hover:text-amber-600 transition"
+          >
+            <Users size={15} />
+            <span className="underline decoration-dotted">{counts?.followers ?? 0} followers</span>
+          </button>
+          <span>·</span>
+          <button onClick={() => setListTab("following")} className="hover:text-amber-600 transition">
+            <span className="underline decoration-dotted">{counts?.following ?? 0} following</span>
+          </button>
           {isPublic && (
             <Link to={`/u/${user.id}`} className="text-amber-600 font-semibold hover:underline">
               View public profile
@@ -47,6 +62,9 @@ const CommunitySettings = () => {
           )}
           <Link to="/challenges" className="flex items-center gap-1 text-amber-600 font-semibold hover:underline">
             <Award size={15} /> Reading Challenges
+          </Link>
+          <Link to="/community" className="flex items-center gap-1 text-amber-600 font-semibold hover:underline">
+            <Search size={15} /> Find Readers
           </Link>
         </div>
 
@@ -61,6 +79,15 @@ const CommunitySettings = () => {
           {isPublic ? "Profile is Public" : "Profile is Private"}
         </button>
       </div>
+
+      {listTab && (
+        <FollowListModal
+          userId={user.id}
+          initialTab={listTab}
+          onClose={() => setListTab(null)}
+          onCountsChanged={loadCounts}
+        />
+      )}
     </div>
   );
 };

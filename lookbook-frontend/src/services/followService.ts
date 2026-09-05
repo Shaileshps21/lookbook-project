@@ -9,6 +9,9 @@ export interface FollowCounts {
 
 export const followUser = (userId: string) => api.post<null>(`/follow/${userId}`);
 export const unfollowUser = (userId: string) => api.delete<null>(`/follow/${userId}`);
+/** Removes someone who follows you — the mirror of unfollow, for the
+ * followers list rather than the following list. */
+export const removeFollower = (userId: string) => api.delete<null>(`/follow/followers/${userId}`);
 
 export const fetchFollowCounts = async (userId: string): Promise<FollowCounts> => {
   const { data } = await api.get<FollowCounts>(`/follow/${userId}/counts`);

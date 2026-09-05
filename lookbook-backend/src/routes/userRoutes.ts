@@ -8,6 +8,7 @@ import {
   updatePublicProfileSetting,
   getMyStats,
   getPublicProfile,
+  getUsersDirectory,
 } from "../controllers/userController";
 import { protect, attachUserIfPresent } from "../middleware/auth";
 import { validate } from "../middleware/validate";
@@ -26,6 +27,7 @@ router.post("/preferences/skip", protect, skipOnboarding);
 router.post("/apply-seller", protect, applyToSell);
 router.patch("/public-profile", protect, updatePublicProfileSetting);
 router.get("/me/stats", protect, getMyStats);
+router.get("/directory", attachUserIfPresent, getUsersDirectory);
 router.get("/:userId/public-profile", attachUserIfPresent, getPublicProfile);
 
 export default router;

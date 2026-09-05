@@ -3,10 +3,13 @@ import { baseSchemaOptions } from "./schemaOptions";
 
 export interface IThread extends Document {
   title: string;
+  content: string;
+  images: string[];
   author: Types.ObjectId;
   club?: Types.ObjectId;
   book?: Types.ObjectId;
   commentsCount: number;
+  likesCount: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -14,10 +17,17 @@ export interface IThread extends Document {
 const threadSchema = new Schema<IThread>(
   {
     title: { type: String, required: true, trim: true, maxlength: 150 },
+    // The actual post body — previously a thread was title-only and every
+    // real word of content lived in the comments underneath it. Not required
+    // at the schema level (pre-existing demo threads have none) but the
+    // controller requires it on every new post going forward.
+    content: { type: String, trim: true, maxlength: 3000, default: "" },
+    images: [{ type: String }],
     author: { type: Schema.Types.ObjectId, ref: "User", required: true },
     club: { type: Schema.Types.ObjectId, ref: "Club", index: true },
     book: { type: Schema.Types.ObjectId, ref: "Book", index: true },
     commentsCount: { type: Number, default: 0 },
+    likesCount: { type: Number, default: 0 },
   },
   { ...baseSchemaOptions }
 );

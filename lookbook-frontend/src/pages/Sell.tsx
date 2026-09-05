@@ -147,7 +147,7 @@ const Sell = () => {
     setUploading(true);
     setError("");
     try {
-      const urls = await Promise.all(Array.from(files).map(uploadImage));
+      const urls = await Promise.all(Array.from(files).map((file) => uploadImage(file)));
       setImages((prev) => [...prev, ...urls]);
     } catch (err) {
       if (err instanceof ApiClientError) {

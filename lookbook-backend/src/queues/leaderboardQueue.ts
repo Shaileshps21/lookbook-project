@@ -1,5 +1,6 @@
 import { Queue, Worker, type Job } from "bullmq";
 import { Challenge } from "../models/Challenge";
+import { ChallengeParticipant } from "../models/ChallengeParticipant";
 import { UserActivity } from "../models/UserActivity";
 import { setCache } from "../config/redis";
 import { createQueueConnection, createWorkerConnection, queuesEnabled, attachQueueErrorHandler } from "./connection";
@@ -20,22 +21,44 @@ export const leaderboardQueue = queuesEnabled
 if (leaderboardQueue) attachQueueErrorHandler(leaderboardQueue, "leaderboard");
 
 /** Recomputes and caches the leaderboard for every active challenge — the same
- * aggregation getLeaderboard() runs on a cache miss, just done proactively. */
+ * aggregation getLeaderboard() runs on a cache miss, just done proactively.
+ * Restricted to that challenge's joined participants (matching the live
+ * controller path) so the cached leaderboard doesn't quietly rank people who
+ * never joined the challenge. */
 const refreshAllLeaderboards = async (): Promise<void> => {
   const challenges = await Challenge.find({ active: true });
 
   for (const challenge of challenges) {
+    const participants = await ChallengeParticipant.find({ challenge: challenge.id }).select("user");
+    const participantIds = participants.map((p) => p.user);
+
+    if (participantIds.length === 0) {
+      await setCache(leaderboardCacheKey(challenge.id), [], CACHE_TTL_SECONDS);
+      continue;
+    }
+
+    const genreStage =
+      challenge.type === "genre" && challenge.genre
+        ? [
+            { $lookup: { from: "books", localField: "book", foreignField: "_id", as: "bookDoc" } },
+            { $unwind: "$bookDoc" },
+            { $match: { "bookDoc.category": challenge.genre } },
+          ]
+        : [];
+
     const rows = await UserActivity.aggregate([
       {
         $match: {
+          user: { $in: participantIds },
           action: "finished",
           createdAt: { $gte: challenge.periodStart, $lte: challenge.periodEnd },
         },
       },
+      ...genreStage,
       { $group: { _id: { user: "$user", book: "$book" } } },
       { $group: { _id: "$_id.user", booksFinished: { $sum: 1 } } },
       { $sort: { booksFinished: -1 } },
-      { $limit: 20 },
+      { $limit: 100 },
       { $lookup: { from: "users", localField: "_id", foreignField: "_id", as: "user" } },
       { $unwind: "$user" },
       { $project: { _id: 0, userId: "$_id", name: "$user.name", avatar: "$user.avatar", booksFinished: 1 } },

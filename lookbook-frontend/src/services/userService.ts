@@ -1,5 +1,5 @@
 import { api } from "./apiClient";
-import type { UserPreferences, SellerApplication, PublicProfile, User, EmailPreferences } from "../types";
+import type { UserPreferences, SellerApplication, PublicProfile, User, EmailPreferences, DirectoryUser } from "../types";
 
 export interface UpdatePreferencesInput {
   genres: string[];
@@ -46,4 +46,27 @@ export const updateMe = async (input: { name?: string; avatar?: string }): Promi
 export const updateEmailPreferences = async (input: Partial<EmailPreferences>): Promise<EmailPreferences> => {
   const { data } = await api.patch<{ emailPreferences: EmailPreferences }>("/users/me/email-preferences", input);
   return data.emailPreferences;
+};
+
+export interface DirectoryPage {
+  users: DirectoryUser[];
+  hasMore: boolean;
+  total: number;
+}
+
+export const fetchUsersDirectory = async (params: {
+  q?: string;
+  genre?: string;
+  sort?: "followers" | "badges" | "newest";
+  page?: number;
+  limit?: number;
+}): Promise<DirectoryPage> => {
+  const { data, meta } = await api.get<DirectoryUser[]>("/users/directory", {
+    q: params.q,
+    genre: params.genre,
+    sort: params.sort,
+    page: params.page,
+    limit: params.limit,
+  });
+  return { users: data, hasMore: Boolean(meta?.hasMore), total: Number(meta?.total ?? data.length) };
 };

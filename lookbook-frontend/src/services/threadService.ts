@@ -11,7 +11,13 @@ export const fetchThreadsForBook = async (bookId: string): Promise<Thread[]> => 
   return data;
 };
 
-export const createThread = async (input: { title: string; clubId?: string; bookId?: string }): Promise<Thread> => {
+export const createThread = async (input: {
+  title: string;
+  content: string;
+  images?: string[];
+  clubId?: string;
+  bookId?: string;
+}): Promise<Thread> => {
   const { data } = await api.post<Thread>("/threads", input);
   return data;
 };
@@ -29,3 +35,23 @@ export const addComment = async (threadId: string, content: string): Promise<Com
 };
 
 export const deleteComment = (commentId: string) => api.delete<null>(`/threads/comments/${commentId}`);
+
+export const likeThread = async (threadId: string): Promise<number> => {
+  const { data } = await api.post<{ likesCount: number }>(`/threads/${threadId}/like`);
+  return data.likesCount;
+};
+
+export const unlikeThread = async (threadId: string): Promise<number> => {
+  const { data } = await api.delete<{ likesCount: number }>(`/threads/${threadId}/like`);
+  return data.likesCount;
+};
+
+export const likeComment = async (commentId: string): Promise<number> => {
+  const { data } = await api.post<{ likesCount: number }>(`/threads/comments/${commentId}/like`);
+  return data.likesCount;
+};
+
+export const unlikeComment = async (commentId: string): Promise<number> => {
+  const { data } = await api.delete<{ likesCount: number }>(`/threads/comments/${commentId}/like`);
+  return data.likesCount;
+};

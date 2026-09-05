@@ -25,6 +25,7 @@ const Onboarding = lazy(() => import("../pages/Onboarding"));
 const SellerDashboard = lazy(() => import("../pages/SellerDashboard"));
 const Profile = lazy(() => import("../pages/Profile"));
 const PublicProfile = lazy(() => import("../pages/PublicProfile"));
+const Community = lazy(() => import("../pages/Community"));
 const Clubs = lazy(() => import("../pages/Clubs"));
 const ClubDetail = lazy(() => import("../pages/ClubDetail"));
 const ClubInvite = lazy(() => import("../pages/ClubInvite"));
@@ -68,6 +69,7 @@ const AppRoutes = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/u/:userId" element={<PublicProfile />} />
         <Route path="/feed" element={<Feed />} />
+        <Route path="/community" element={<Community />} />
         <Route path="/clubs" element={<Clubs />} />
         <Route path="/clubs/join/:token" element={<ClubInvite />} />
         <Route path="/clubs/:id" element={<ClubDetail />} />

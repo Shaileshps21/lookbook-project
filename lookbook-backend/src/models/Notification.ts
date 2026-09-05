@@ -9,7 +9,12 @@ export type NotificationType =
   | "seller.rejected"
   | "price.drop"
   | "payout.resolved"
-  | "order.pickupScheduled";
+  | "order.pickupScheduled"
+  | "community.like"
+  | "community.comment"
+  | "community.follow"
+  | "community.challengeJoined"
+  | "community.challengeCompleted";
 
 export interface INotification extends Document {
   user: Types.ObjectId;
